@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+//apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        applicationId "com.desmond.citypicker"
+        minSdkVersion 14
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+
+
+def supportLibraryVersion = '24.2.1'
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile "com.android.support:support-v4:$supportLibraryVersion"
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:gridlayout-v7:$supportLibraryVersion"
+//    compile 'com.belerweb:pinyin4j:2.5.0'
+    compile 'com.gjiazhe:wavesidebar:1.3'
+    compile 'com.squareup.sqlbrite:sqlbrite:1.1.1'
+    compile 'io.reactivex:rxjava:1.2.0'
+    //rx系列
+    compile 'io.reactivex:rxandroid:1.2.1'
+
+//    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.3@aar'
+}
+
+/*publish {
+    userOrg = 'desmond'//bintray.com用户名
+    groupId = 'com.desmond'//jcenter上的路径
+    artifactId = 'citypicker'//项目名称
+    publishVersion = '0.1.0'//版本号
+    desc = 'Oh hi, this is a nice description for a project, right?'//描述，不重要
+    website = 'https://github.com/yuruizhe/citypicker'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+}*/

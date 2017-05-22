@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/c_item_py_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:background="@color/gray_bg"
+            android:paddingLeft="@dimen/activity_padding"
+            android:textStyle="bold"
+            android:paddingRight="@dimen/activity_padding"
+            android:textColor="@color/theme_vice2_color"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/c_item_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_selector"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:paddingLeft="@dimen/activity_padding"
+            android:paddingRight="35dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"/>
+        <View
+            android:background="@color/gray_bg"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/activity_padding"
+            android:layout_marginRight="35dp"
+            android:layout_height="0.5dp"/>
+    </LinearLayout>
+</RelativeLayout>

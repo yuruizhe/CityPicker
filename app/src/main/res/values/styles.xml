@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/theme_vice2_color</item>
+    </style>
+
+</resources>
