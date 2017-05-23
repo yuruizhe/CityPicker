@@ -27,8 +27,9 @@ Import
 </dependency>
 ``` 
 ###### Gradle
-compile 'com.desmond:CityPicker:0.1.0'
-
+``` gradle
+compile 'com.desmond:CityPicker:xxx'
+```
 Wiki
 ---
 ### Functions
