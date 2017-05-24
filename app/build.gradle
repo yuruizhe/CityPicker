@@ -59,7 +59,7 @@ dependencies {
 def siteUrl = 'https://github.com/yuruizhe/CityPicker' // 项目的主页
 def gitUrl = 'https://github.com/yuruizhe/CityPicker.git' // Git仓库的url
 group = "com.desmond" // Maven Group ID for the artifact，一般填你唯一的包名
-version = "0.1.0"
+version = "0.2.2"
 project.archivesBaseName ='CityPicker'
         install {
     repositories.mavenInstaller {

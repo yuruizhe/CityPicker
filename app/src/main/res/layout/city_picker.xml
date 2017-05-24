@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/title_bareddd"
-        layout="@layout/title_bar"></include>
+        layout="@layout/citypicker_title_bar"></include>
 
     <com.desmond.citypicker.views.pull2refresh.RefreshRecyclerView
         android:id="@+id/c_p_content_rrv"
@@ -15,18 +15,18 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/title_bareddd"></com.desmond.citypicker.views.pull2refresh.RefreshRecyclerView>
 
- <com.gjiazhe.wavesidebar.WaveSideBar
+    <com.gjiazhe.wavesidebar.WaveSideBar
         android:id="@+id/c_p_content_wsb"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_below="@+id/title_bareddd"
         android:paddingRight="8dp"
         app:sidebar_lazy_respond="false"
         app:sidebar_max_offset="80dp"
         app:sidebar_position="right"
         app:sidebar_text_alignment="center"
         app:sidebar_text_color="@color/theme_vice2_color"
-        app:sidebar_text_size="14sp"
-        android:layout_below="@+id/title_bareddd"/>
+        app:sidebar_text_size="14sp"/>
 
 
 </RelativeLayout>

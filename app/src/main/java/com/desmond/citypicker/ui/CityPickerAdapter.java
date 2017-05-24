@@ -21,10 +21,11 @@ import com.desmond.citypicker.views.pull2refresh.SimpleBaseAdapter;
 
 public class CityPickerAdapter extends SimpleBaseAdapter<BaseCity>
 {
-
-    public CityPickerAdapter(Context context)
+    protected  int pyTextColor ;
+    public CityPickerAdapter(Context context,int pyTextColor)
     {
         super(context);
+        this.pyTextColor = pyTextColor;
     }
 
     @Override
@@ -56,6 +57,7 @@ public class CityPickerAdapter extends SimpleBaseAdapter<BaseCity>
 
                 if (isFirst)
                 {
+                    pyTv.setTextColor(pyTextColor);
                     pyTv.setVisibility(View.VISIBLE);
                     pyTv.setText(object.getCityPYFirst());
                 } else

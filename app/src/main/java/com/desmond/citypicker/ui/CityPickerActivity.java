@@ -18,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.desmond.citypicker.ApplicationContext;
 import com.desmond.citypicker.R;
 import com.desmond.citypicker.bean.BaseCity;
 import com.desmond.citypicker.bean.Options;
@@ -151,7 +150,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     protected void init(Bundle savedInstanceState)
     {
-        ApplicationContext.setApplicationContext(getApplicationContext());
         receiveDatas();
 
         registerViews();
@@ -165,7 +163,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
 
         //城市列表适配
-        adapter = new CityPickerAdapter(this);
+        adapter = new CityPickerAdapter(this, options.getIndexBarTextColor());
         contentRrv.setLayoutManager(new LinearLayoutManager(this));
         contentRrv.setAdapter(adapter);
         contentRrv.addHeaderView(getHeaderView());
@@ -437,10 +435,4 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         whenCitySelected(baseCity);
     }
 
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        ApplicationContext.setApplicationContext(null);
-    }
 }
