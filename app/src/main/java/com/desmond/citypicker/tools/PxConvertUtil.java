@@ -2,7 +2,7 @@ package com.desmond.citypicker.tools;
 
 import android.content.Context;
 
-import com.desmond.citypicker.MyApplication;
+import com.desmond.citypicker.ApplicationContext;
 
 /**
  * 转换工具
@@ -60,7 +60,7 @@ public class PxConvertUtil
 
     private static Context getContext()
     {
-        return MyApplication.getDefault();
+        return ApplicationContext.getApplicationContext();
     }
 
 }

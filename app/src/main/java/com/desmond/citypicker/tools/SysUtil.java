@@ -14,7 +14,7 @@ import android.content.Context;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.desmond.citypicker.MyApplication;
+import com.desmond.citypicker.ApplicationContext;
 
 import java.lang.reflect.Field;
 
@@ -33,7 +33,7 @@ public class SysUtil
 
     public static String getAppId()
     {
-        return MyApplication.getDefault().getApplicationInfo().packageName;
+        return ApplicationContext.getApplicationContext().getApplicationInfo().packageName;
     }
 
 
@@ -46,7 +46,7 @@ public class SysUtil
     public static int getScreenWidth()
     {
         if (screenWidth > 0) return screenWidth;
-        WindowManager wm = (WindowManager) MyApplication.getDefault().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) ApplicationContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         screenWidth = wm.getDefaultDisplay().getWidth();
         return screenWidth;
     }
@@ -85,7 +85,7 @@ public class SysUtil
                 obj = c.newInstance();
                 field = c.getField("status_bar_height");
                 x = Integer.parseInt(field.get(obj).toString());
-                statusBarHeight = MyApplication.getDefault().getResources().getDimensionPixelSize(x);
+                statusBarHeight = ApplicationContext.getApplicationContext().getResources().getDimensionPixelSize(x);
             } catch (Exception e1)
             {
                 e1.printStackTrace();

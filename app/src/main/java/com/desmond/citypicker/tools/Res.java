@@ -3,7 +3,8 @@ package com.desmond.citypicker.tools;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-import com.desmond.citypicker.MyApplication;
+import com.desmond.citypicker.ApplicationContext;
+
 
 /**
  * 获取资源文件帮助
@@ -79,6 +80,6 @@ public class Res
 
     public static Resources getResources()
     {
-        return MyApplication.getDefault().getResources();
+        return ApplicationContext.getApplicationContext().getResources();
     }
 }

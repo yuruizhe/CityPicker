@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.desmond.citypicker.MyApplication;
+import com.desmond.citypicker.ApplicationContext;
 import com.desmond.citypicker.tools.SysUtil;
 
 import java.io.File;
@@ -31,8 +31,8 @@ public class AddressDBHelper extends SQLiteOpenHelper
 
     public AddressDBHelper(String name,int viersion)
     {
-        super(MyApplication.getDefault(), name, null, viersion);
-        this.mContext = MyApplication.getDefault();
+        super(ApplicationContext.getApplicationContext(), name, null, viersion);
+        this.mContext = ApplicationContext.getApplicationContext();
         try
         {
 

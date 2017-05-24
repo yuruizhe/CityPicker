@@ -25,12 +25,14 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                Intent intent = new Intent(MainActivity.this, CityPickerActivity.class);
-
-                Options options = new Options();
-//                options.setHotCitiesId(new String[]{"2", "9", "18", "11", "66", "1", "80", "49", "100"});
                 BaseCity baseCity = new BaseCity();
                 baseCity.setCityName("南京市");
+                baseCity.setCode("315");
+
+                Intent intent = new Intent(MainActivity.this, CityPickerActivity.class);
+                Options options = new Options();
+//                options.setHotCitiesId(new String[]{"2", "9", "18", "11", "66", "1", "80", "49", "100"});
+
                 options.setGpsCity(baseCity);
                 options.setMaxHistory(3);
 
@@ -47,5 +49,9 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) return;
         Toast.makeText(MainActivity.this, ((BaseCity) data.getSerializableExtra(KEYS.SELECTED_RESULT)).getCityName(), Toast.LENGTH_SHORT).show();
+
+
+
+
     }
 }
