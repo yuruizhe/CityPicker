@@ -12,7 +12,11 @@ ScreenShot
 
 Version Log
 ---
-v0.1.0
+* v0.2.2
+  * 修复进入页面会闪退问题
+  * 修复修改右边滑动索引栏颜色时左边拼音标签颜色未修改问题
+  * 启动城市选择页面时增加一个步骤见 [Step3](#step3)
+* v0.1.0
   * 初始导入
 
 Import
@@ -59,6 +63,18 @@ Manifest.permission.WRITE_EXTERNAL_STORAGE
  </activity>
 ```
 ##### Step3
+在application中需要调用setApplicationContext方法，否则会报空指针。这里尽可能传入ApplicationContext，避免内存泄漏
+``` java
+@Override
+public void onCreate()
+{
+   super.onCreate();
+   ApplicationContext.setApplicationContext(this);
+}
+```
+
+##### Step4
+启动城市选择页面及相关自定义配置
 ``` java
       BaseCity gpsCity = new BaseCity();
         gpsCity.setCityName("南京市");
@@ -109,7 +125,7 @@ Manifest.permission.WRITE_EXTERNAL_STORAGE
         //requestCode 自己定义
         startActivityForResult(intent, 20009);
  ```
-##### Step4
+##### Step5
 接收选择结果
 ``` java
  @Override
@@ -127,5 +143,5 @@ Thanks
 
 Contact author
 ---
-QQ 350248823
+QQ 350248823</br>
 欢迎issues，作者看到后会第一时间回复
