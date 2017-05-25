@@ -152,6 +152,11 @@ public void onCreate()
         baseCity.getCityPYFirst();
     }
 ```
+
+### Be careful
+基础数据库名称定义为：**city.sqlite**。在引入的工程中千万不可创建**同名的数据库**，否则可能会发生异常！
+
+
 Demo
 ---
 手机扫描下方二维码下载demo尝鲜</br>
