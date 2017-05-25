@@ -2,7 +2,8 @@ CityPicker
 ===
 
 [![API](https://img.shields.io/badge/API-14%2B-yellow.svg?style=flat)](https://android-arsenal.com/api?level=14)</br>
-一个仿大众点评的城市快速选择器</br>
+一个仿大众点评的城市快速选择器，
+最少只需 **一行** 代码即可启动城市选择器，
 支持页面样式修改，多元化自定义
 
 ScreenShot
@@ -15,11 +16,11 @@ ScreenShot
 Version Log
 ---
 * ``V0.3.0``
-  * 简化api调用形式，修改为Rx形式
+  * 简化api调用形式，修改为Rx形式，见[操作步骤](#use)
 * ``V0.2.2``
   * 修复进入页面会闪退问题
   * 修复修改右边滑动索引栏颜色时左边拼音标签颜色未修改问题
-  * 启动城市选择页面时增加一个步骤见 [Step3](#step3)
+  * 启动城市选择页面时增加一个步骤见  [Step3](#step3)
 * ``V0.1.0``
   * 初始导入
 
