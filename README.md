@@ -151,6 +151,11 @@ public void onCreate()
         baseCity.getCityPYFirst();
     }
 ```
+Demo
+---
+手机扫描下方二维码下载demo尝鲜</br>
+![](https://www.pgyer.com/app/qrcode/ecVs)
+
 Thanks
 ---
 * https://github.com/gjiazhe/WaveSideBar
