@@ -1,14 +1,15 @@
 package com.desmond.citypicker.bean;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 
 import com.desmond.citypicker.R;
 import com.desmond.citypicker.tools.PxConvertUtil;
 import com.desmond.citypicker.tools.Res;
-
-import java.io.Serializable;
 
 /**
  * @Todo
@@ -17,7 +18,7 @@ import java.io.Serializable;
  * @Pacakge com.desmond.citypicker.bean
  */
 
-public class Options implements Serializable
+public class Options implements  Parcelable
 {
     /**
      * 定位城市
@@ -81,7 +82,9 @@ public class Options implements Serializable
     /**
      * 是否使用沉浸式状态栏
      */
-    protected  boolean useImmerseBar;
+    protected boolean useImmerseBar;
+
+    private Context context;
 
     public BaseCity getGpsCity()
     {
@@ -125,7 +128,7 @@ public class Options implements Serializable
 
     public Drawable getTitleBarDrawable()
     {
-        return Res.drawable(titleBarDrawable);
+        return Res.drawable(context,titleBarDrawable);
     }
 
 
@@ -151,13 +154,13 @@ public class Options implements Serializable
 
     public void setSearchViewTextColor(@ColorRes int searchViewTextColor)
     {
-        this.searchViewTextColor = Res.color(searchViewTextColor);
+        this.searchViewTextColor = Res.color(context,searchViewTextColor);
     }
 
 
     public Drawable getSearchViewDrawable()
     {
-        return Res.drawable(searchViewDrawable);
+        return Res.drawable(context,searchViewDrawable);
     }
 
     public void setSearchViewDrawable(@DrawableRes int searchViewDrawable)
@@ -167,7 +170,7 @@ public class Options implements Serializable
 
     public Drawable getTitleBarBackBtnDrawable()
     {
-        return Res.drawable(titleBarBackBtnDrawable);
+        return Res.drawable(context,titleBarBackBtnDrawable);
     }
 
 
@@ -183,7 +186,7 @@ public class Options implements Serializable
 
     public void setIndexBarTextSize(float indexBarTextSize)
     {
-        this.indexBarTextSize = PxConvertUtil.sp2px(indexBarTextSize);
+        this.indexBarTextSize = PxConvertUtil.sp2px(context,indexBarTextSize);
     }
 
     public int getIndexBarTextColor()
@@ -193,7 +196,7 @@ public class Options implements Serializable
 
     public void setIndexBarTextColor(@ColorRes int indexBarTextColor)
     {
-        this.indexBarTextColor = Res.color(indexBarTextColor);
+        this.indexBarTextColor = Res.color(context,indexBarTextColor);
     }
 
     public boolean isUseImmerseBar()
@@ -206,22 +209,89 @@ public class Options implements Serializable
         this.useImmerseBar = useImmerseBar;
     }
 
-    public Options()
+    public Context getContext()
     {
-        this.gpsCity = null;
-        this.hotCitiesId = null;
-        this.customDBName = "city.sqlite";
-        this.maxHistory = 12;
+        return context;
+    }
+
+    public void setContext(Context context)
+    {
+        this.context = context;
+    }
+
+    public Options(Context context)
+    {
+        setContext(context);
+        setGpsCity(null);
+        setHotCitiesId(null);
+        setCustomDBName("city.sqlite");
+        setMaxHistory(12);
 
         setTitleBarDrawable(R.color.theme_main_color);
-        this.searchViewTextSize = 15;
+        setSearchViewTextSize(15);
 
         setSearchViewTextColor(R.color.black);
         setSearchViewDrawable(R.drawable.header_city_bg);
         setTitleBarBackBtnDrawable(R.drawable.press_def_bg);
-//        this.titleBarHeight = Res.dimen(R.dimen.title_bar_height);
+
         setIndexBarTextSize(14);
-        this.indexBarTextColor = Res.color(R.color.theme_vice2_color);
-        this.useImmerseBar = true;
+        setIndexBarTextColor(R.color.theme_vice2_color);
+        setUseImmerseBar(true);
     }
+
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeParcelable(this.gpsCity, flags);
+        dest.writeStringArray(this.hotCitiesId);
+        dest.writeString(this.customDBName);
+        dest.writeInt(this.maxHistory);
+        dest.writeInt(this.titleBarDrawable);
+        dest.writeInt(this.searchViewTextSize);
+        dest.writeInt(this.searchViewTextColor);
+        dest.writeInt(this.searchViewDrawable);
+        dest.writeInt(this.titleBarBackBtnDrawable);
+        dest.writeFloat(this.indexBarTextSize);
+        dest.writeInt(this.indexBarTextColor);
+        dest.writeByte(this.useImmerseBar ? (byte) 1 : (byte) 0);
+    }
+
+    protected Options(Parcel in)
+    {
+        this.gpsCity = in.readParcelable(BaseCity.class.getClassLoader());
+        this.hotCitiesId = in.createStringArray();
+        this.customDBName = in.readString();
+        this.maxHistory = in.readInt();
+        this.titleBarDrawable = in.readInt();
+        this.searchViewTextSize = in.readInt();
+        this.searchViewTextColor = in.readInt();
+        this.searchViewDrawable = in.readInt();
+        this.titleBarBackBtnDrawable = in.readInt();
+        this.indexBarTextSize = in.readFloat();
+        this.indexBarTextColor = in.readInt();
+        this.useImmerseBar = in.readByte() != 0;
+        this.context = in.readParcelable(Context.class.getClassLoader());
+    }
+
+    public static final Creator<Options> CREATOR = new Creator<Options>()
+    {
+        @Override
+        public Options createFromParcel(Parcel source)
+        {
+            return new Options(source);
+        }
+
+        @Override
+        public Options[] newArray(int size)
+        {
+            return new Options[size];
+        }
+    };
 }

@@ -113,7 +113,7 @@ public class RecyclerViewDivider extends RecyclerView.ItemDecoration
     public RecyclerViewDivider(Context context, int orientation, int dividerHeight, int dividerColor, int spanCount)
     {
         this(context, orientation, spanCount);
-        mDividerHeight = PxConvertUtil.dip2px(dividerHeight);
+        mDividerHeight = PxConvertUtil.dip2px(context,dividerHeight);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(dividerColor);

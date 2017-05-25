@@ -1,6 +1,7 @@
 package com.desmond.citypicker.bean;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * 城市基础对象，如果需要自定义可以继承此对象，并为所有字段赋值
@@ -10,7 +11,7 @@ import java.io.Serializable;
  * @Pacakge com.desmond.citypicker
  */
 
-public class BaseCity implements Serializable
+public class BaseCity implements  Parcelable
 {
     /**
      *  城市code
@@ -96,4 +97,50 @@ public class BaseCity implements Serializable
     {
         this.cityPinYin = cityPinYin;
     }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeString(this.code);
+        dest.writeString(this.cityName);
+        dest.writeString(this.cityPinYin);
+        dest.writeString(this.cityPYFirst);
+        dest.writeString(this.id);
+        dest.writeByte(this.isHot ? (byte) 1 : (byte) 0);
+    }
+
+    public BaseCity()
+    {
+    }
+
+    protected BaseCity(Parcel in)
+    {
+        this.code = in.readString();
+        this.cityName = in.readString();
+        this.cityPinYin = in.readString();
+        this.cityPYFirst = in.readString();
+        this.id = in.readString();
+        this.isHot = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<BaseCity> CREATOR = new Parcelable.Creator<BaseCity>()
+    {
+        @Override
+        public BaseCity createFromParcel(Parcel source)
+        {
+            return new BaseCity(source);
+        }
+
+        @Override
+        public BaseCity[] newArray(int size)
+        {
+            return new BaseCity[size];
+        }
+    };
 }

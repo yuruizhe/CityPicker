@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.desmond.citypicker.ApplicationContext;
 import com.desmond.citypicker.tools.SysUtil;
 
 import java.io.File;
@@ -26,13 +25,14 @@ public class AddressDBHelper extends SQLiteOpenHelper
     private Context mContext;
 
 
-    private static final String DATABASE_PATH = "/data/data/" + SysUtil.getAppId() + "/databases/";
+    private static String DATABASE_PATH ;
 
 
-    public AddressDBHelper(String name,int viersion)
+    public AddressDBHelper(Context context,String name,int viersion)
     {
-        super(ApplicationContext.getApplicationContext(), name, null, viersion);
-        this.mContext = ApplicationContext.getApplicationContext();
+        super(context, name, null, viersion);
+        this.mContext = context;
+        DATABASE_PATH = "/data/data/" + SysUtil.getAppId(mContext) + "/databases/";
         try
         {
 

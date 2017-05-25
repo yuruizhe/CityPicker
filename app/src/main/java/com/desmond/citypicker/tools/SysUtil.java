@@ -14,8 +14,6 @@ import android.content.Context;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.desmond.citypicker.ApplicationContext;
-
 import java.lang.reflect.Field;
 
 /**
@@ -31,9 +29,9 @@ public class SysUtil
 
     private static int screenWidth;
 
-    public static String getAppId()
+    public static String getAppId(Context context)
     {
-        return ApplicationContext.getApplicationContext().getApplicationInfo().packageName;
+        return context.getApplicationInfo().packageName;
     }
 
 
@@ -43,10 +41,10 @@ public class SysUtil
      * @return int
      * @author Desmond 2014-11-10 上午10:34:51
      */
-    public static int getScreenWidth()
+    public static int getScreenWidth(Context context)
     {
         if (screenWidth > 0) return screenWidth;
-        WindowManager wm = (WindowManager) ApplicationContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         screenWidth = wm.getDefaultDisplay().getWidth();
         return screenWidth;
     }
@@ -71,7 +69,7 @@ public class SysUtil
      *
      * @return
      */
-    public static int getStatusBarHeight()
+    public static int getStatusBarHeight(Context context)
     {
         if (statusBarHeight <= 0)
         {
@@ -85,7 +83,7 @@ public class SysUtil
                 obj = c.newInstance();
                 field = c.getField("status_bar_height");
                 x = Integer.parseInt(field.get(obj).toString());
-                statusBarHeight = ApplicationContext.getApplicationContext().getResources().getDimensionPixelSize(x);
+                statusBarHeight = context.getResources().getDimensionPixelSize(x);
             } catch (Exception e1)
             {
                 e1.printStackTrace();

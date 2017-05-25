@@ -1,6 +1,7 @@
 package com.desmond.citypicker.presenter;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
@@ -23,6 +24,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class CityPickerPresenter
 {
+    private Context context;
     private BriteDatabase db;
 
     public static final String LISHI_REMEN = "#";
@@ -31,8 +33,9 @@ public class CityPickerPresenter
     public int version = 1;
     public static final int MAX_HEADER_CITY_SIZE = 12;
 
-    public CityPickerPresenter(String dbName)
+    public CityPickerPresenter(Context context,String dbName)
     {
+        this.context = context;
         if (!TextUtils.isEmpty(dbName))
             this.name = dbName;
     }
@@ -107,7 +110,7 @@ public class CityPickerPresenter
     {
         if (db != null) return db;
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
-        AddressDBHelper dbHelper = new AddressDBHelper(this.name, this.version);
+        AddressDBHelper dbHelper = new AddressDBHelper(context,this.name, this.version);
         db = sqlBrite.wrapDatabaseHelper(dbHelper, AndroidSchedulers.mainThread());
         return db;
     }

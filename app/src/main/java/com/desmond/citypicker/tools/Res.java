@@ -1,9 +1,7 @@
 package com.desmond.citypicker.tools;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
-
-import com.desmond.citypicker.ApplicationContext;
 
 
 /**
@@ -22,9 +20,9 @@ public class Res
      * @param string 资源id
      * @return
      */
-    public static String string(int string)
+    public static String string(Context context,int string)
     {
-        return getResources().getString(string);
+        return context.getResources().getString(string);
     }
 
     /**
@@ -34,9 +32,9 @@ public class Res
      * @param args   填充占位符的参数
      * @return
      */
-    public static String string(int string, Object... args)
+    public static String string(Context context,int string, Object... args)
     {
-        return getResources().getString(string, args);
+        return context.getResources().getString(string, args);
     }
 
     /**
@@ -45,9 +43,9 @@ public class Res
      * @param dimen 资源id
      * @return
      */
-    public static float dimen(int dimen)
+    public static float dimen(Context context,int dimen)
     {
-        return PxConvertUtil.px2dip(dimenPx(dimen));
+        return PxConvertUtil.px2dip(context,dimenPx(context,dimen));
     }
 
     /**
@@ -56,9 +54,9 @@ public class Res
      * @param dimen 资源id
      * @return
      */
-    public static int dimenPx(int dimen)
+    public static int dimenPx(Context context,int dimen)
     {
-        return getResources().getDimensionPixelSize(dimen);
+        return context.getResources().getDimensionPixelSize(dimen);
     }
 
     /**
@@ -67,19 +65,15 @@ public class Res
      * @param color 资源id
      * @return
      */
-    public static int color(int color)
+    public static int color(Context context,int color)
     {
-        return getResources().getColor(color);
+        return context.getResources().getColor(color);
     }
 
 
-    public static Drawable drawable(int drawable)
+    public static Drawable drawable(Context context,int drawable)
     {
-        return getResources().getDrawable(drawable);
+        return context.getResources().getDrawable(drawable);
     }
 
-    public static Resources getResources()
-    {
-        return ApplicationContext.getApplicationContext().getResources();
-    }
 }

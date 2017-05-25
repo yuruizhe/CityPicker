@@ -30,6 +30,8 @@ import com.desmond.citypicker.views.pull2refresh.RefreshRecyclerView;
 import com.desmond.citypicker.views.pull2refresh.callback.IOnItemClickListener;
 import com.gjiazhe.wavesidebar.WaveSideBar;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import static com.desmond.citypicker.presenter.CityPickerPresenter.LISHI_REMEN;
@@ -139,9 +141,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      */
     protected void receiveDatas()
     {
-        options = (Options) getIntent().getSerializableExtra(KEYS.OPTIONS);
+        options =  getIntent().getParcelableExtra(KEYS.OPTIONS);
         if (options == null)
-            options = new Options();
+            options = new Options(this.getApplicationContext());
+        options.setContext(this.getApplicationContext());
         gpsCity = options.getGpsCity();
         hotCitiesId = options.getHotCitiesId();
         maxHistory = options.getMaxHistory();
@@ -156,15 +159,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         setViewStyle();
 
-        cityPickerPresenter = new CityPickerPresenter(options.getCustomDBName());
+        cityPickerPresenter = new CityPickerPresenter(this.getApplicationContext(),options.getCustomDBName());
 
         datas = cityPickerPresenter.getCitysSort();
         pyIndex = cityPickerPresenter.getIndex();
 
 
         //城市列表适配
-        adapter = new CityPickerAdapter(this, options.getIndexBarTextColor());
-        contentRrv.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new CityPickerAdapter(this.getApplicationContext(), options.getIndexBarTextColor());
+        contentRrv.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
         contentRrv.setAdapter(adapter);
         contentRrv.addHeaderView(getHeaderView());
         contentRrv.setOnItemClickListener(CityPickerActivity.this);
@@ -177,7 +180,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         contentWsb.setOnSelectIndexItemListener(this);
 
         //搜索结果适配
-        searchAdapter = new SearchAdapter(this, datas, cityPickerPresenter);
+        searchAdapter = new SearchAdapter(this.getApplicationContext(), datas, cityPickerPresenter);
         titleSearchEt.setAdapter(searchAdapter);
         titleSearchEt.setOnItemClickListener(this);
     }
@@ -203,8 +206,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && options.isUseImmerseBar())
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int statusBarHeight = SysUtil.getStatusBarHeight();
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, statusBarHeight + Res.dimenPx(R.dimen.title_bar_height));
+            int statusBarHeight = SysUtil.getStatusBarHeight(this.getApplicationContext());
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, statusBarHeight + Res.dimenPx(this.getApplicationContext(),R.dimen.title_bar_height));
             title.setPadding(0, statusBarHeight + title.getPaddingTop(), 0, 0);
             title.setLayoutParams(params);
         }
@@ -221,7 +224,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     {
         if (headerView != null) return headerView;
 
-        headerView = LayoutInflater.from(this).inflate(R.layout.city_picker_header, contentRrv.getRecyclerView(), false);
+        headerView = LayoutInflater.from(this.getApplicationContext()).inflate(R.layout.city_picker_header, contentRrv.getRecyclerView(), false);
         gpsTv = findById(headerView, R.id.c_p_header_gps_tv);
         historyTitleTv = findById(headerView, R.id.c_p_header_historytitle_tv);
         historyGroupGl = findById(headerView, R.id.c_p_header_historygroup_gl);
@@ -229,7 +232,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         hotGroupGl = findById(headerView, R.id.c_p_header_hotgroup_gl);
 
         //动态计算每个按钮的宽度：（屏幕宽度-右边距-左边距）/每行按钮个数-单个按钮的右边距
-        headerCityWidth = (SysUtil.getScreenWidth() - historyGroupGl.getPaddingRight() - historyGroupGl.getPaddingLeft()) / historyGroupGl.getColumnCount() - PxConvertUtil.dip2px(10);
+        headerCityWidth = (SysUtil.getScreenWidth(this.getApplicationContext()) - historyGroupGl.getPaddingRight() - historyGroupGl.getPaddingLeft()) / historyGroupGl.getColumnCount() - PxConvertUtil.dip2px(this,10);
 
         setHeaderViewValue();
         return headerView;
@@ -313,11 +316,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      */
     protected Button getNewButton()
     {
-        int dp10 = PxConvertUtil.dip2px(10);
-        int dp3 = PxConvertUtil.dip2px(3);
+        int dp10 = PxConvertUtil.dip2px(this.getApplicationContext(),10);
+        int dp3 = PxConvertUtil.dip2px(this.getApplicationContext(),3);
         Button btn = new Button(this);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.height = PxConvertUtil.dip2px(40);
+        params.height = PxConvertUtil.dip2px(this.getApplicationContext(),40);
         //没有使用权重的原因是当只有一个button的时候宽度会充满全屏
         //这里根据屏幕宽度动态计算button的宽度
         params.width = headerCityWidth;
@@ -390,6 +393,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void whenCitySelected(BaseCity city)
     {
         cityPickerPresenter.saveHistoryCity(city);
+        EventBus.getDefault().post(city);
         Intent intent = new Intent();
         intent.putExtra(KEYS.SELECTED_RESULT, city);
         setResult(RESULT_OK, intent);
