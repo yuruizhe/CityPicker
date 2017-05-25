@@ -1,22 +1,24 @@
 CityPicker
 ===
 
+[![API](https://img.shields.io/badge/API-14%2B-yellow.svg?style=flat)](https://android-arsenal.com/api?level=14)</br>
 一个仿大众点评的城市快速选择器</br>
 支持页面样式修改，多元化自定义
 
 ScreenShot
 ---
-![](https://github.com/yuruizhe/CityPicker/blob/master/screenshot/Screenshot_2017-05-22-11-22-58.png)
-![](https://github.com/yuruizhe/CityPicker/blob/master/screenshot/Screenshot_2017-05-22-11-23-08.png)
-![](https://github.com/yuruizhe/CityPicker/blob/master/screenshot/Screenshot_2017-05-22-11-22-45.png)
+
+| ![](https://github.com/yuruizhe/CityPicker/blob/master/screenshot/Screenshot_2017-05-22-11-22-58.png) | ![](https://github.com/yuruizhe/CityPicker/blob/master/screenshot/Screenshot_2017-05-22-11-23-08.png) | ![](https://github.com/yuruizhe/CityPicker/blob/master/screenshot/Screenshot_2017-05-22-11-22-45.png) |
+|---|----|:---:|
+
 
 Version Log
 ---
-* v0.2.2
+* ``V0.2.2``
   * 修复进入页面会闪退问题
   * 修复修改右边滑动索引栏颜色时左边拼音标签颜色未修改问题
   * 启动城市选择页面时增加一个步骤见 [Step3](#step3)
-* v0.1.0
+* ``V0.1.0``
   * 初始导入
 
 Import
@@ -132,10 +134,36 @@ public void onCreate()
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+        
         if (resultCode != RESULT_OK || requestCode != 20009) return;
-        Toast.makeText(MainActivity.this, ((BaseCity) data.getSerializableExtra(KEYS.SELECTED_RESULT)).getCityName(), Toast.LENGTH_SHORT).show();
+        
+        BaseCity baseCity = (BaseCity) data.getSerializableExtra(KEYS.SELECTED_RESULT);
+        
+        //获取选择城市编码
+        baseCity.getCode();
+        
+        //获取选择城市名称
+        baseCity.getCityName();
+        
+        // 获取选择城市拼音全拼（历史城市可能为空）
+        baseCity.getCityPinYin();
+        
+        //获取选择城市拼音首字母（历史城市可能为空）
+        baseCity.getCityPYFirst();
     }
 ```
+
+### Be careful
+* 基础数据库名称定义为：**city.sqlite**。在引入的工程中千万不可创建**同名的数据库**，否则可能会发生异常！
+
+* 自定义基础数据库必须重写``city.sqlite``中的``tb_city`` 和 ``tb_history``, 允许增加字段，但不可删除或修改字段
+
+
+Demo
+---
+手机扫描下方二维码下载demo尝鲜</br>
+![](https://www.pgyer.com/app/qrcode/ecVs)
+
 Thanks
 ---
 * https://github.com/gjiazhe/WaveSideBar
