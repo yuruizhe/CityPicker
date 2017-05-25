@@ -134,7 +134,7 @@ public void onCreate()
     {
         super.onActivityResult(requestCode, resultCode, data);
         
-        if (resultCode != RESULT_OK) return;
+        if (resultCode != RESULT_OK || requestCode != 20009) return;
         
         BaseCity baseCity = (BaseCity) data.getSerializableExtra(KEYS.SELECTED_RESULT);
         
