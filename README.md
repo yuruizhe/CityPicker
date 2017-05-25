@@ -133,7 +133,7 @@ public void onCreate()
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-          super.onActivityResult(requestCode, resultCode, data);
+        
         if (resultCode != RESULT_OK) return;
         
         BaseCity baseCity = (BaseCity) data.getSerializableExtra(KEYS.SELECTED_RESULT);
