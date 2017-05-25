@@ -140,6 +140,37 @@ Manifest.permission.WRITE_EXTERNAL_STORAGE
 
 * 自定义基础数据库必须重写``city.sqlite``中的``tb_city`` 和 ``tb_history``, 允许增加字段，但不可删除或修改字段
 
+项目中使用了如下三方库，如与你项目中的库冲突，请及时排除</br>
+```gradle
+def supportLibraryVersion = '24.2.1'
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile "com.android.support:support-v4:$supportLibraryVersion"
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:gridlayout-v7:$supportLibraryVersion"
+    compile 'com.gjiazhe:wavesidebar:1.3'
+    compile 'com.squareup.sqlbrite:sqlbrite:1.1.1'
+    compile 'io.reactivex:rxjava:1.2.0'
+    //rx系列
+    compile 'io.reactivex:rxandroid:1.2.1'
+
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+}
+```
+排除示例：
+```gradle
+compile ('com.desmond:CityPicker:0.3.0' ){
+        exclude group: 'com.android.support'
+        exclude group:'com.squareup.sqlbrite'
+        exclude group:'io.reactivex'
+        exclude group:'io.rxandroid'
+        exclude group:'org.greenrobot'
+    }
+```
 
 Demo
 ---
