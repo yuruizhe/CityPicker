@@ -133,8 +133,22 @@ public void onCreate()
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK || requestCode != 20009) return;
-        Toast.makeText(MainActivity.this, ((BaseCity) data.getSerializableExtra(KEYS.SELECTED_RESULT)).getCityName(), Toast.LENGTH_SHORT).show();
+          super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) return;
+        
+        BaseCity baseCity = (BaseCity) data.getSerializableExtra(KEYS.SELECTED_RESULT);
+        
+        //获取选择城市编码
+        baseCity.getCode();
+        
+        //获取选择城市名称
+        baseCity.getCityName();
+        
+        // 获取选择城市拼音全拼（历史城市可能为空）
+        baseCity.getCityPinYin();
+        
+        //获取选择城市拼音首字母（历史城市可能为空）
+        baseCity.getCityPYFirst();
     }
 ```
 Thanks
