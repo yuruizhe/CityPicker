@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +41,11 @@ import static com.desmond.citypicker.presenter.CityPickerPresenter.LISHI_REMEN;
 /**
  *
  */
-public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, IOnItemClickListener, WaveSideBar.OnSelectIndexItemListener, AdapterView.OnItemClickListener
+public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener,
+        IOnItemClickListener,
+        WaveSideBar.OnSelectIndexItemListener,
+        AdapterView.OnItemClickListener,
+        TextWatcher
 {
     protected View title;
     /**
@@ -50,6 +56,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      * 搜索框
      */
     protected AutoCompleteTextView titleSearchEt;
+
+
+    /**
+     * 搜索框清空按钮
+     */
+    protected ImageButton searchClearIb;
+
     /**
      * 列表
      */
@@ -141,7 +154,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      */
     protected void receiveDatas()
     {
-        options =  getIntent().getParcelableExtra(KEYS.OPTIONS);
+        options = getIntent().getParcelableExtra(KEYS.OPTIONS);
         if (options == null)
             options = new Options(this.getApplicationContext());
         options.setContext(this.getApplicationContext());
@@ -159,7 +172,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         setViewStyle();
 
-        cityPickerPresenter = new CityPickerPresenter(this.getApplicationContext(),options.getCustomDBName());
+        cityPickerPresenter = new CityPickerPresenter(this.getApplicationContext(), options.getCustomDBName());
 
         datas = cityPickerPresenter.getCitysSort();
         pyIndex = cityPickerPresenter.getIndex();
@@ -207,7 +220,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             int statusBarHeight = SysUtil.getStatusBarHeight(this.getApplicationContext());
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, statusBarHeight + Res.dimenPx(this.getApplicationContext(),R.dimen.title_bar_height));
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, statusBarHeight + Res.dimenPx(this.getApplicationContext(), R.dimen.title_bar_height));
             title.setPadding(0, statusBarHeight + title.getPaddingTop(), 0, 0);
             title.setLayoutParams(params);
         }
@@ -232,7 +245,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         hotGroupGl = findById(headerView, R.id.c_p_header_hotgroup_gl);
 
         //动态计算每个按钮的宽度：（屏幕宽度-右边距-左边距）/每行按钮个数-单个按钮的右边距
-        headerCityWidth = (SysUtil.getScreenWidth(this.getApplicationContext()) - historyGroupGl.getPaddingRight() - historyGroupGl.getPaddingLeft()) / historyGroupGl.getColumnCount() - PxConvertUtil.dip2px(this,10);
+        headerCityWidth = (SysUtil.getScreenWidth(this.getApplicationContext()) - historyGroupGl.getPaddingRight() - historyGroupGl.getPaddingLeft()) / historyGroupGl.getColumnCount() - PxConvertUtil.dip2px(this, 10);
 
         setHeaderViewValue();
         return headerView;
@@ -316,11 +329,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      */
     protected Button getNewButton()
     {
-        int dp10 = PxConvertUtil.dip2px(this.getApplicationContext(),10);
-        int dp3 = PxConvertUtil.dip2px(this.getApplicationContext(),3);
+        int dp10 = PxConvertUtil.dip2px(this.getApplicationContext(), 10);
+        int dp3 = PxConvertUtil.dip2px(this.getApplicationContext(), 3);
         Button btn = new Button(this);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.height = PxConvertUtil.dip2px(this.getApplicationContext(),40);
+        params.height = PxConvertUtil.dip2px(this.getApplicationContext(), 40);
         //没有使用权重的原因是当只有一个button的时候宽度会充满全屏
         //这里根据屏幕宽度动态计算button的宽度
         params.width = headerCityWidth;
@@ -343,10 +356,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     {
         title = findById(R.id.title_root_rl);
         titleBackIb = findById(R.id.title_back_ib);
+        searchClearIb = findById(R.id.title_searchclear_ib);
         contentRrv = findById(R.id.c_p_content_rrv);
         contentWsb = findById(R.id.c_p_content_wsb);
         titleSearchEt = findById(R.id.title_txt_et);
         titleBackIb.setOnClickListener(this);
+        searchClearIb.setOnClickListener(this);
+        titleSearchEt.addTextChangedListener(this);
     }
 
     @Override
@@ -357,6 +373,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         {
             onBackPressed();
 
+        } else if (i == R.id.title_searchclear_ib)//搜索框清空按钮
+        {
+            titleSearchEt.setText("");
         } else if (i == R.id.c_p_header_gps_tv)// 点击gps定位
         {
             whenCitySelected(gpsCity);
@@ -364,7 +383,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         } else if (i == R.id.header_city_button)// 点击热门城市或历史城市
         {
             whenCitySelected((BaseCity) v.getTag());
-
         }
 
     }
@@ -439,4 +457,21 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         whenCitySelected(baseCity);
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after)
+    {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count)
+    {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s)
+    {
+        searchClearIb.setVisibility(s.length() <= 0 ? View.INVISIBLE : View.VISIBLE);
+    }
 }

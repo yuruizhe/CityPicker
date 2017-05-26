@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:layout_height="wrap_content">
+                android:focusableInTouchMode="true">
 
     <RelativeLayout
         android:id="@+id/title_root_rl"
@@ -31,25 +31,43 @@
 
                 android:src="@drawable/back_normal"/>
 
-            <AutoCompleteTextView
-                android:id="@+id/title_txt_et"
-                android:layout_width="wrap_content"
+
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="@dimen/title_bar_height"
                 android:layout_marginTop="5dp"
-                android:inputType="text"
                 android:layout_weight="1"
-                android:background="@drawable/header_city_bg"
-                android:completionThreshold="1"
-                android:hint="@string/search_hint"
-                android:maxLines="1"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:textColor="@color/black"
-                android:textColorHint="#D5D5D5"
-                android:textSize="15sp"/>
+                android:orientation="horizontal">
+
+                <AutoCompleteTextView
+                    android:id="@+id/title_txt_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/header_city_bg"
+                    android:completionThreshold="1"
+                    android:gravity="center_vertical"
+                    android:hint="@string/search_hint"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="35dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#D5D5D5"
+                    android:textSize="15sp"/>
+
+                <ImageButton
+                    android:id="@+id/title_searchclear_ib"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:src="@android:drawable/presence_offline"
+                    android:visibility="invisible"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
 
             <ImageButton
                 android:id="@+id/title_menu_ib"

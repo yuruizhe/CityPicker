@@ -8,8 +8,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.desmond.citypicker.R;
 import com.desmond.citypicker.bean.BaseCity;
 import com.desmond.citypicker.presenter.CityPickerPresenter;
+import com.desmond.citypicker.tools.Res;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable
     List<BaseCity> list;
     CityPickerPresenter cityPickerPresenter;
 
-    public SearchAdapter(Context context, List<BaseCity> list,CityPickerPresenter cityPickerPresenter)
+    public SearchAdapter(Context context, List<BaseCity> list, CityPickerPresenter cityPickerPresenter)
     {
         super();
         this.context = context;
@@ -61,6 +63,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable
             viewHolder = new ViewHolder();
             convertView = View.inflate(context, android.R.layout.simple_list_item_1, null);
             viewHolder.value = (TextView) convertView.findViewById(android.R.id.text1);
+            viewHolder.value.setTextColor(Res.color(context, R.color.black));
             convertView.setTag(viewHolder);
         } else
             viewHolder = (ViewHolder) convertView.getTag();
@@ -82,7 +85,11 @@ public class SearchAdapter extends BaseAdapter implements Filterable
             @Override
             protected FilterResults performFiltering(CharSequence constraint)
             {
+                String s = constraint.toString().trim();
                 FilterResults results = new FilterResults();
+                if (s.length() == 0)
+                    return results;
+
                 List<BaseCity> citys = cityPickerPresenter.searchCity(constraint.toString().trim());
                 results.count = citys.size();
                 results.values = citys;
