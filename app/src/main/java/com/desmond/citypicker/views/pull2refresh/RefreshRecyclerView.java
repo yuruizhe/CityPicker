@@ -444,13 +444,6 @@ hasMore = true;
 
     public void disablePullLable()
     {
-        pullSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                pullSrl.setRefreshing(false);
-            }
-        });
+        pullSrl.setEnabled(false);
     }
 }

@@ -1,6 +1,5 @@
 package com.desmond.citypicker.bin;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.ColorRes;
@@ -8,9 +7,9 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresPermission;
 
 import com.desmond.citypicker.bean.BaseCity;
+import com.desmond.citypicker.bean.OnDestoryEvent;
 import com.desmond.citypicker.bean.Options;
 import com.desmond.citypicker.callback.IOnCityPickerCheckedCallBack;
 import com.desmond.citypicker.finals.KEYS;
@@ -39,7 +38,6 @@ public class CityPicker
     }
 
     @MainThread
-    @RequiresPermission(allOf = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public static CityPicker with(Context context)
     {
         instance = new CityPicker();
@@ -61,7 +59,7 @@ public class CityPicker
         BaseCity baseCity = new BaseCity();
         baseCity.setCityName(name);
         baseCity.setCode(code);
-        instance.options.setGpsCity(baseCity);
+        setGpsCity(baseCity);
         return this;
     }
 
@@ -255,10 +253,17 @@ public class CityPicker
         destroy();
     }
 
-    private void destroy()
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void whenCityPickerChecked(OnDestoryEvent event)
+    {
+        destroy();
+    }
+
+    public void destroy()
     {
         EventBus.getDefault().unregister(this);
         instance = null;
         options = null;
     }
+
 }

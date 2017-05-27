@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.desmond.citypicker.R;
 import com.desmond.citypicker.bean.BaseCity;
+import com.desmond.citypicker.bean.OnDestoryEvent;
 import com.desmond.citypicker.bean.Options;
 import com.desmond.citypicker.finals.KEYS;
 import com.desmond.citypicker.presenter.CityPickerPresenter;
@@ -34,6 +35,7 @@ import com.gjiazhe.wavesidebar.WaveSideBar;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.desmond.citypicker.presenter.CityPickerPresenter.LISHI_REMEN;
@@ -140,6 +142,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     protected Options options;
 
+    /**
+     * 索引缓存
+     */
+    protected HashMap<String, Integer> indexPosMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -189,6 +196,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         adapter.notifyDataSetChanged();
 
         //设置索引
+        indexPosMap = new HashMap<>(pyIndex.size());
         contentWsb.setIndexItems(pyIndex.toArray(new String[pyIndex.size()]));
         contentWsb.setOnSelectIndexItemListener(this);
 
@@ -418,6 +426,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
 
+
     /**
      * 手指在右边索引上滑动的回调
      *
@@ -428,17 +437,30 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     {
         if (LISHI_REMEN.equals(index))
         {
-            ((LinearLayoutManager) contentRrv.getRecyclerView().getLayoutManager()).scrollToPositionWithOffset(0, 0);
+            scrollTo(0);
             return;
         }
+
+        // 行号先从索引缓存中获取，如果缓存中没有再遍历基础数据List
+        Integer pos = indexPosMap.get(index);
+        if (pos != null)
+        {
+            scrollTo(pos.intValue() + adapter.getHeaderSize());
+            return;
+        }
+
         for (int i = 0; i < datas.size(); i++)
         {
-            if (datas.get(i).getCityPYFirst().equals(index))
-            {
-                ((LinearLayoutManager) contentRrv.getRecyclerView().getLayoutManager()).scrollToPositionWithOffset(i + adapter.getHeaderSize(), 0);
-                return;
-            }
+            if (!datas.get(i).getCityPYFirst().equals(index)) continue;
+            indexPosMap.put(index, i);
+            scrollTo(i + adapter.getHeaderSize());
+            return;
         }
+    }
+
+    protected void scrollTo(int line)
+    {
+        ((LinearLayoutManager) contentRrv.getRecyclerView().getLayoutManager()).scrollToPositionWithOffset(line, 0);
     }
 
     /**
@@ -473,5 +495,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     public void afterTextChanged(Editable s)
     {
         searchClearIb.setVisibility(s.length() <= 0 ? View.INVISIBLE : View.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        EventBus.getDefault().post(new OnDestoryEvent());
     }
 }
