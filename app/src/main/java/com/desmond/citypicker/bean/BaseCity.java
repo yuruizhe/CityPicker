@@ -10,13 +10,16 @@ import android.os.Parcelable;
  * @Date 2017/5/17
  * @Pacakge com.desmond.citypicker
  */
-
-public class BaseCity implements  Parcelable
+public class BaseCity implements Parcelable
 {
     /**
-     *  城市code
+     *  城市code(baidu)
      */
-    private String code;
+    private String codeByBaidu;
+    /**
+     *  城市code(高德)
+     */
+    private String codeByAMap;
     /**
      *  城市名称
      */
@@ -37,6 +40,26 @@ public class BaseCity implements  Parcelable
      *  是否为热门城市
      */
     private boolean isHot;
+
+    public String getCodeByBaidu()
+    {
+        return codeByBaidu;
+    }
+
+    public void setCodeByBaidu(String codeByBaidu)
+    {
+        this.codeByBaidu = codeByBaidu;
+    }
+
+    public String getCodeByAMap()
+    {
+        return codeByAMap;
+    }
+
+    public void setCodeByAMap(String codeByAMap)
+    {
+        this.codeByAMap = codeByAMap;
+    }
 
     public boolean isHot()
     {
@@ -68,15 +91,7 @@ public class BaseCity implements  Parcelable
         this.cityPYFirst = cityPYFirst;
     }
 
-    public String getCode()
-    {
-        return code;
-    }
 
-    public void setCode(String code)
-    {
-        this.code = code;
-    }
 
     public String getCityName()
     {
@@ -107,7 +122,8 @@ public class BaseCity implements  Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(this.code);
+        dest.writeString(this.codeByBaidu);
+        dest.writeString(this.codeByAMap);
         dest.writeString(this.cityName);
         dest.writeString(this.cityPinYin);
         dest.writeString(this.cityPYFirst);
@@ -121,7 +137,8 @@ public class BaseCity implements  Parcelable
 
     protected BaseCity(Parcel in)
     {
-        this.code = in.readString();
+        this.codeByBaidu = in.readString();
+        this.codeByAMap = in.readString();
         this.cityName = in.readString();
         this.cityPinYin = in.readString();
         this.cityPYFirst = in.readString();

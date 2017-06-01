@@ -47,18 +47,33 @@ public class CityPicker
 
 
     /**
-     * 设置定位城市
+     * 设置定位城市(百度定位)
      *
      * @param name 城市中文名称
-     * @param code 城市code
+     * @param code 百度城市code
      * @return
      */
     @MainThread
-    public CityPicker setGpsCity(@Nullable String name, @Nullable String code)
+    public CityPicker setGpsCityByBaidu(@Nullable String name, @Nullable String code)
     {
         BaseCity baseCity = new BaseCity();
         baseCity.setCityName(name);
-        baseCity.setCode(code);
+        baseCity.setCodeByBaidu(code);
+        setGpsCity(baseCity);
+        return this;
+    }
+
+    /**
+     * 设置定位城市(高德定位)
+     * @param name 城市中文名称
+     * @param code 高德城市code
+     * @return
+     */
+    public CityPicker setGpsCityByAMap(@Nullable String name, @Nullable String code)
+    {
+        BaseCity baseCity = new BaseCity();
+        baseCity.setCityName(name);
+        baseCity.setCodeByAMap(code);
         setGpsCity(baseCity);
         return this;
     }

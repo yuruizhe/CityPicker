@@ -29,43 +29,15 @@ public class CityPickerPresenter
 
     public static final String LISHI_REMEN = "#";
 
-    public String name = "city.sqlite";
-    public int version = 1;
+    public String name;
+    public final int VERSION = 2;
     public static final int MAX_HEADER_CITY_SIZE = 12;
 
-    public CityPickerPresenter(Context context,String dbName)
+    public CityPickerPresenter(Context context, String dbName)
     {
         this.context = context;
         if (!TextUtils.isEmpty(dbName))
             this.name = dbName;
-    }
-
-
-    /**
-     * 覆盖基础城市表，同时会清空历史城市表
-     *
-     * @param datas
-     */
-    @Deprecated
-    public void overrideBaseDb(List<BaseCity> datas)
-    {
-        getDatabase().delete("tb_city", null, new String[0]);
-        getDatabase().delete("tb_history", null, new String[0]);
-
-        StringBuffer sb = new StringBuffer();
-        sb.append("intsert into tb_city (city_name,city_py,city_py_first,city_code,is_hot)");
-        for (int i = 0; i < datas.size(); i++)
-        {
-            BaseCity city = datas.get(i);
-            sb.append("('").append(city.getCityName()).append("',");
-            sb.append("'").append(city.getCityPinYin()).append("',");
-            sb.append("'").append(city.getCityPYFirst()).append("',");
-            sb.append("'").append(city.getCode()).append("'),");
-            sb.append("'").append(city.isHot() ? "T" : "F").append("')");
-            if (i + 1 < datas.size())
-                sb.append(",");
-        }
-        getDatabase().execute(sb.toString());
     }
 
 
@@ -89,7 +61,7 @@ public class CityPickerPresenter
      */
     public List<String> getIndex()
     {
-        Cursor c = getDatabase().query("select distinct city_py_first  from tb_city order by city_py_first");
+        Cursor c = getDatabase().query("select distinct city_py_first  from tb_city c order by city_py_first");
         List<String> datas = new ArrayList<>(c.getCount() + 1);
         datas.add(LISHI_REMEN);
         while (c.moveToNext())
@@ -110,7 +82,7 @@ public class CityPickerPresenter
     {
         if (db != null) return db;
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
-        AddressDBHelper dbHelper = new AddressDBHelper(context,this.name, this.version);
+        AddressDBHelper dbHelper = new AddressDBHelper(context, this.name, this.VERSION);
         db = sqlBrite.wrapDatabaseHelper(dbHelper, AndroidSchedulers.mainThread());
         return db;
     }
@@ -124,19 +96,8 @@ public class CityPickerPresenter
      */
     public List<BaseCity> getHistoryCity(int max)
     {
-        Cursor c = getDatabase().query("select * from tb_history order by time desc  limit ?", max + "");
-
-        List<BaseCity> datas = new ArrayList<>(c.getCount());
-        while (c.moveToNext())
-        {
-            String name = c.getString(c.getColumnIndex("city_name"));
-            String code = c.getString(c.getColumnIndex("city_code"));
-
-            BaseCity baseCity = new BaseCity();
-            baseCity.setCityName(name);
-            baseCity.setCode(code);
-            datas.add(baseCity);
-        }
+        Cursor c = getDatabase().query("select c._id,c.city_name,c.city_py,c.city_py_first,c.city_code_baidu,c.city_code_amap,c.is_hot from tb_history h left join tb_city c on h.city_id=c._id order by time desc  limit ?", max + "");
+        List<BaseCity> datas = getCityFromDb(c);
         c.close();
         return datas;
     }
@@ -148,17 +109,71 @@ public class CityPickerPresenter
      */
     public void saveHistoryCity(BaseCity city)
     {
-        ContentValues cv = new ContentValues(3);
+        String cityId = getCityId(city);
+        if(cityId == null)
+            return;
+
+        ContentValues cv = new ContentValues(2);
         cv.put("time", System.currentTimeMillis() + "");
 
         //如果之前没有记录过就会插入数据，否则修改时间戳为当前时间
-        boolean has = getDatabase().update("tb_history", cv, "city_name=?", city.getCityName()) > 0;
+        boolean has = getDatabase().update("tb_history", cv, "city_id=?", cityId) > 0;
         if (!has)
         {
-            cv.put("city_code", city.getCode());
-            cv.put("city_name", city.getCityName());
+            cv.put("city_id", cityId);
             getDatabase().insert("tb_history", cv);
         }
+    }
+
+
+    /**
+     * 获取城市表的主键id
+     * @param city
+     * @return
+     */
+    protected String getCityId(BaseCity city)
+    {
+        String cityId = null;
+
+        // 如果bean中就带有id就直接返回
+        // 除了点击定位城市应该都进入这个分支
+        if (!TextUtils.isEmpty(city.getId()))
+            return city.getId();
+
+
+        // 根据城市名称查询id
+        Cursor c = getDatabase().query("select _id from tb_city where city_name=?", city.getCityName());
+        if (c.moveToNext())
+        {
+            cityId = c.getString(c.getColumnIndex("_id"));
+            c.close();
+            return cityId;
+        }
+
+        // 考虑到城市名称叫法不同。如“北京市”和“北京” 表达的是同一个意思，但是数据库会匹配不到
+        // 在这里还会根据百度code或高德code查询一次。
+        // 这里之所以没有在一条语句中用or查询，一方面是有可能输入的code为null会报错，另一方面是出于效率的考虑
+        if(!TextUtils.isEmpty(city.getCodeByBaidu()))
+        {
+            c = getDatabase().query("select _id from tb_city where city_code_baidu=?", city.getCodeByBaidu());
+            if (c.moveToNext())
+            {
+                cityId = c.getString(c.getColumnIndex("_id"));
+                c.close();
+                return cityId;
+            }
+        }else
+        {
+            c = getDatabase().query("select _id from tb_city where city_code_amap=?", city.getCodeByAMap());
+            if (c.moveToNext())
+            {
+                cityId = c.getString(c.getColumnIndex("_id"));
+                c.close();
+                return cityId;
+            }
+        }
+
+        return cityId;
     }
 
 
@@ -225,7 +240,8 @@ public class CityPickerPresenter
             String name = c.getString(c.getColumnIndex("city_name"));
             String py = c.getString(c.getColumnIndex("city_py"));
             String pyFrist = c.getString(c.getColumnIndex("city_py_first"));
-            String code = c.getString(c.getColumnIndex("city_code"));
+            String codeBD = c.getString(c.getColumnIndex("city_code_baidu"));
+            String codeAMap = c.getString(c.getColumnIndex("city_code_amap"));
             String id = c.getString(c.getColumnIndex("_id"));
             String isHot = c.getString(c.getColumnIndex("is_hot"));
 
@@ -233,7 +249,8 @@ public class CityPickerPresenter
             baseCity.setCityName(name);
             baseCity.setCityPinYin(py);
             baseCity.setCityPYFirst(pyFrist);
-            baseCity.setCode(code);
+            baseCity.setCodeByBaidu(codeBD);
+            baseCity.setCodeByAMap(codeAMap);
             baseCity.setId(id);
             baseCity.setHot("T".equals(isHot));
             datas.add(baseCity);
