@@ -15,6 +15,9 @@ ScreenShot
 
 Version Log
 ---
+* ``V0.4.0``
+  * 数据库表结构修改，增加了高德地图citycode
+  * 设置gps城市的api略有改动见  [Step3](#step3)
 * ``V0.3.3``
   * 紧急修复一个可能导致内存泄漏问题
   * 优化提高滑动检索效率
@@ -54,7 +57,7 @@ Wiki
 * 支持自定义基础城市列表（beta）
 * 支持历史点击城市查询
 * 支持自定义热门城市列表
-* 支持选择城市返回自定义对象（目前已经囊括：城市名称，城市code（baidu）等）
+* 支持选择城市返回对象（目前已经囊括：城市名称，城市code（baidu、高德）等）
 * 提供方法支持页面样式轻度自定义。或继承CityPickerActivity重写部分UI样式
 * 基础数据依赖sqlite提供高效的查询效率
 * 与三方定位库解耦
@@ -85,8 +88,8 @@ Manifest.permission.WRITE_EXTERNAL_STORAGE
         //自定义热门城市，输入数据库中的城市id（_id）
         .setHotCitiesId("2", "9", "18", "11", "66", "1", "80", "49", "100");
 
-        //设置定位城市
-        .setGpsCity("南京市","315");
+        //设置定位城市(使用百度定位)
+        .setGpsCityByBaidu("南京市","315"); //.setGpsCityByAMap("南京市","025"); //高德定位
 
         //设置最多显示历史点击城市数量，0为不显示历史城市
         .setMaxHistory(6);
@@ -126,15 +129,15 @@ Manifest.permission.WRITE_EXTERNAL_STORAGE
            public void onCityPickerChecked(BaseCity baseCity)
            {
                //获取选择城市编码
-               baseCity.getCode();
+               baseCity.getCodeByBaidu();  //baseCity.getCodeByAMap();//高德code
         
                //获取选择城市名称
                baseCity.getCityName();
         
-               // 获取选择城市拼音全拼（历史城市可能为空）
+               // 获取选择城市拼音全拼
                baseCity.getCityPinYin();
         
-               //获取选择城市拼音首字母（历史城市可能为空）
+               //获取选择城市拼音首字母
                baseCity.getCityPYFirst();
            }
          })
