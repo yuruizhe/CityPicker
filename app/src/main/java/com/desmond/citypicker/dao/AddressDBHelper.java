@@ -104,6 +104,7 @@ public class AddressDBHelper extends SQLiteOpenHelper
         if(!f.exists())
             f.mkdirs();
 
+
         // Open the empty db as the output stream
         OutputStream myOutput = new FileOutputStream(outFileName);
 
@@ -159,5 +160,6 @@ public class AddressDBHelper extends SQLiteOpenHelper
                 e.printStackTrace();
             }
         }
+        this.getReadableDatabase();
     }
 }
