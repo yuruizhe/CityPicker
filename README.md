@@ -15,6 +15,8 @@ ScreenShot
 
 Version Log
 ---
+* ``V0.4.3``
+  * 修复更新数据库表结构后第一次进入会闪退问题
 * ``V0.4.0``
   * 数据库表结构修改，增加了高德地图citycode
   * 设置gps城市的api略有改动见  [Step3](#step3)
