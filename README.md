@@ -15,7 +15,7 @@ ScreenShot
 
 Version Log
 ---
-* ``V0.4.4``
+* ``V0.4.5``
   * 修改设置位置信息方式，由之前必须在打开页面之前获取位置信息改为允许用户在打开页面后设置位置信息，具体使用方式见 [Step3](#step3)
   * 简化配置项，不需要在AndroidManifest中再注册Activity，并默认隐藏titlebar
 * ``V0.4.3``
@@ -70,11 +70,8 @@ Wiki
 
 ### Use
 ##### Step1
-``` xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-```
-对于Android 6.0还需要配置动态权限</br>
+
+对于Android 6.0需要配置动态权限</br>
 ``` java
 Manifest.permission.WRITE_EXTERNAL_STORAGE
 ```
@@ -83,6 +80,9 @@ Manifest.permission.WRITE_EXTERNAL_STORAGE
 启动城市选择页面及相关自定义配置
 ``` java
         CityPicker.with(getContext())        
+        
+        //是否需要显示当前城市,如果为false那么就隐藏当前城市，并且调用setGpsCityByBaidu()或setGpsCityByAMap()都不会生效，非必选项,默认为true
+        .setUseGpsCity(true)
 
         //自定义热门城市，输入数据库中的城市id（_id），非必选项，默认为数据库中的热门城市
         .setHotCitiesId("2", "9", "18", "11", "66", "1", "80", "49", "100");
