@@ -46,7 +46,16 @@ public class CityPicker
         return instance;
     }
 
-
+    /**
+     * 是否需要显示当前城市
+     * @param useGpsCity 如果为false那么就隐藏当前城市，并且调用setGpsCityByBaidu()或setGpsCityByAMap()都不会生效
+     * @return
+     */
+    public CityPicker setUseGpsCity(boolean useGpsCity)
+    {
+        this.options.setUseGpsCity(useGpsCity);
+        return this;
+    }
     /**
      * 设置定位城市(百度定位)
      *
