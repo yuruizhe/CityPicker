@@ -18,7 +18,7 @@
         android:paddingLeft="@dimen/activity_padding"
         android:paddingRight="@dimen/activity_padding"
         android:paddingTop="10dp"
-        android:text="南京"
+        android:text="@string/location_city_lodding"
         android:textColor="@color/black"
         android:textSize="14sp"/>
 

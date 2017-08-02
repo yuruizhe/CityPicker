@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.desmond.citypicker.R;
 import com.desmond.citypicker.bean.BaseCity;
+import com.desmond.citypicker.bean.GpsCityEvent;
 import com.desmond.citypicker.bean.OnDestoryEvent;
 import com.desmond.citypicker.bean.Options;
 import com.desmond.citypicker.finals.KEYS;
@@ -34,6 +35,8 @@ import com.desmond.citypicker.views.pull2refresh.callback.IOnItemClickListener;
 import com.gjiazhe.wavesidebar.WaveSideBar;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.List;
@@ -115,9 +118,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected List<String> pyIndex;
 
     /**
-     * 定位城市
+     * 城市定位
      */
-    protected BaseCity gpsCity;
+    protected  BaseCity gpsCity;
+
+    /**
+     * 是否需要显示城市定位
+     */
+    protected boolean useGpsCity;
 
     /**
      * 热门城市列表
@@ -165,7 +173,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         if (options == null)
             options = new Options(this.getApplicationContext());
         options.setContext(this.getApplicationContext());
-        gpsCity = options.getGpsCity();
+        useGpsCity = options.isUseGpsCity();
         hotCitiesId = options.getHotCitiesId();
         maxHistory = options.getMaxHistory();
 
@@ -178,6 +186,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         registerViews();
 
         setViewStyle();
+
+        EventBus.getDefault().register(this);
 
         cityPickerPresenter = new CityPickerPresenter(this.getApplicationContext(), options.getCustomDBName());
 
@@ -264,14 +274,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      */
     protected void setHeaderViewValue()
     {
-        //设置自动定位城市
-        if (gpsCity != null)
+        if (!useGpsCity)
         {
-            gpsTv.setVisibility(View.VISIBLE);
-            gpsTv.setText(gpsCity.getCityName());
-            gpsTv.setOnClickListener(this);
-        } else
             gpsTv.setVisibility(View.GONE);
+            return;
+        }else
+            gpsTv.setVisibility(View.VISIBLE);
 
         // 填充历史城市
         maxHistory = maxHistory > CityPickerPresenter.MAX_HEADER_CITY_SIZE ? CityPickerPresenter.MAX_HEADER_CITY_SIZE : maxHistory;
@@ -497,10 +505,40 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         searchClearIb.setVisibility(s.length() <= 0 ? View.INVISIBLE : View.VISIBLE);
     }
 
+    /**
+     * 城市定位成功
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void whenLocationSucc(GpsCityEvent event)
+    {
+        if (gpsTv == null) return;
+        if (!useGpsCity)
+        {
+            gpsTv.setVisibility(View.GONE);
+            return;
+        }else
+            gpsTv.setVisibility(View.VISIBLE);
+
+         gpsCity = event.gpsCity;
+        //设置自动定位城市
+        if (gpsCity != null)
+        {
+            gpsTv.setText(gpsCity.getCityName());
+            gpsTv.setOnClickListener(this);
+        } else
+        {
+            gpsTv.setText(Res.string(this,R.string.location_city_lodding));
+            gpsTv.setOnClickListener(null);
+        }
+
+    }
+
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
         EventBus.getDefault().post(new OnDestoryEvent());
+        EventBus.getDefault().unregister(this);
     }
 }

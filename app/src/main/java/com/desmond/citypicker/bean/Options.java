@@ -21,9 +21,9 @@ import com.desmond.citypicker.tools.Res;
 public class Options implements  Parcelable
 {
     /**
-     * 定位城市
+     * 是否需要显示当前城市
      */
-    protected BaseCity gpsCity;
+    protected boolean useGpsCity;
 
     /**
      * 热门城市列表
@@ -86,14 +86,14 @@ public class Options implements  Parcelable
 
     private Context context;
 
-    public BaseCity getGpsCity()
+    public boolean isUseGpsCity()
     {
-        return gpsCity;
+        return useGpsCity;
     }
 
-    public void setGpsCity(BaseCity gpsCity)
+    public void setUseGpsCity(boolean useGpsCity)
     {
-        this.gpsCity = gpsCity;
+        this.useGpsCity = useGpsCity;
     }
 
     public String[] getHotCitiesId()
@@ -222,7 +222,7 @@ public class Options implements  Parcelable
     public Options(Context context)
     {
         setContext(context);
-        setGpsCity(null);
+        setUseGpsCity(true);
         setHotCitiesId(null);
         setCustomDBName("city.sqlite");
         setMaxHistory(12);
@@ -249,7 +249,7 @@ public class Options implements  Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeParcelable(this.gpsCity, flags);
+        dest.writeByte(this.useGpsCity ? (byte) 1 : (byte) 0);
         dest.writeStringArray(this.hotCitiesId);
         dest.writeString(this.customDBName);
         dest.writeInt(this.maxHistory);
@@ -265,7 +265,7 @@ public class Options implements  Parcelable
 
     protected Options(Parcel in)
     {
-        this.gpsCity = in.readParcelable(BaseCity.class.getClassLoader());
+        this.useGpsCity =  in.readByte() != 0;
         this.hotCitiesId = in.createStringArray();
         this.customDBName = in.readString();
         this.maxHistory = in.readInt();

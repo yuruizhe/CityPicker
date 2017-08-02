@@ -1,6 +1,4 @@
-//apply plugin: 'com.android.application'
 apply plugin: 'com.android.library'
-//apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 android {
@@ -47,19 +45,10 @@ dependencies {
 
 }
 
-/*publish {
-    userOrg = 'desmond'//bintray.com用户名
-    groupId = 'com.desmond'//jcenter上的路径
-    artifactId = 'citypicker'//项目名称
-    publishVersion = '0.1.0'//版本号
-    desc = 'Oh hi, this is a nice description for a project, right?'//描述，不重要
-    website = 'https://github.com/yuruizhe/CityPicker'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
-}*/
-
 def siteUrl = 'https://github.com/yuruizhe/CityPicker' // 项目的主页
 def gitUrl = 'https://github.com/yuruizhe/CityPicker.git' // Git仓库的url
 group = "com.desmond" // Maven Group ID for the artifact，一般填你唯一的包名
-version = "0.4.3"
+version = "0.4.4"
 project.archivesBaseName ='CityPicker'
         install {
     repositories.mavenInstaller {
@@ -125,12 +114,3 @@ bintray {
     }
 }
 
-/*javadoc {
-    options{
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        author true
-        version true
-        links "http://docs.oracle.com/javase/7/docs/api"
-    }
-}*/

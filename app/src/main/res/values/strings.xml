@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CityPicker</string>
     <string name="search_hint">输入城市名称或拼音</string>
+    <string name="location_city_lodding">获取位置中...</string>
 </resources>

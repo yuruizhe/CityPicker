@@ -9,6 +9,7 @@ import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 
 import com.desmond.citypicker.bean.BaseCity;
+import com.desmond.citypicker.bean.GpsCityEvent;
 import com.desmond.citypicker.bean.OnDestoryEvent;
 import com.desmond.citypicker.bean.Options;
 import com.desmond.citypicker.callback.IOnCityPickerCheckedCallBack;
@@ -54,13 +55,12 @@ public class CityPicker
      * @return
      */
     @MainThread
-    public CityPicker setGpsCityByBaidu(@Nullable String name, @Nullable String code)
+    public static void setGpsCityByBaidu(@Nullable String name, @Nullable String code)
     {
         BaseCity baseCity = new BaseCity();
         baseCity.setCityName(name);
         baseCity.setCodeByBaidu(code);
         setGpsCity(baseCity);
-        return this;
     }
 
     /**
@@ -69,13 +69,12 @@ public class CityPicker
      * @param code 高德城市code
      * @return
      */
-    public CityPicker setGpsCityByAMap(@Nullable String name, @Nullable String code)
+    public static void setGpsCityByAMap(@Nullable String name, @Nullable String code)
     {
         BaseCity baseCity = new BaseCity();
         baseCity.setCityName(name);
         baseCity.setCodeByAMap(code);
         setGpsCity(baseCity);
-        return this;
     }
 
     /**
@@ -85,10 +84,9 @@ public class CityPicker
      * @return
      */
     @MainThread
-    public CityPicker setGpsCity(BaseCity baseCity)
+    public static void setGpsCity(BaseCity baseCity)
     {
-        instance.options.setGpsCity(baseCity);
-        return this;
+        EventBus.getDefault().post(new GpsCityEvent(baseCity));
     }
 
     /**
@@ -269,7 +267,7 @@ public class CityPicker
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void whenCityPickerChecked(OnDestoryEvent event)
+    public void whenCityPickerClosed(OnDestoryEvent event)
     {
         destroy();
     }
