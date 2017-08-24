@@ -25,6 +25,7 @@ import com.desmond.citypicker.bean.BaseCity;
 import com.desmond.citypicker.bean.GpsCityEvent;
 import com.desmond.citypicker.bean.OnDestoryEvent;
 import com.desmond.citypicker.bean.Options;
+import com.desmond.citypicker.bin.CityPicker;
 import com.desmond.citypicker.finals.KEYS;
 import com.desmond.citypicker.presenter.CityPickerPresenter;
 import com.desmond.citypicker.tools.PxConvertUtil;
@@ -120,7 +121,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     /**
      * 城市定位
      */
-    protected  BaseCity gpsCity;
+    protected BaseCity gpsCity;
 
     /**
      * 是否需要显示城市定位
@@ -174,9 +175,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             options = new Options(this.getApplicationContext());
         options.setContext(this.getApplicationContext());
         useGpsCity = options.isUseGpsCity();
+        gpsCity = CityPicker.gpsCity;
         hotCitiesId = options.getHotCitiesId();
         maxHistory = options.getMaxHistory();
-
     }
 
     protected void init(Bundle savedInstanceState)
@@ -228,7 +229,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         titleSearchEt.setTextColor(options.getSearchViewTextColor());
         titleSearchEt.setBackgroundDrawable(options.getSearchViewDrawable());
 
-        titleBackIb.setBackgroundDrawable(options.getTitleBarBackBtnDrawable());
+        titleBackIb.setImageDrawable(options.getTitleBarBackBtnDrawable());
 
         contentWsb.setTextColor(options.getIndexBarTextColor());
         contentWsb.setTextSize(options.getIndexBarTextSize());
@@ -274,12 +275,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      */
     protected void setHeaderViewValue()
     {
-        if (!useGpsCity)
-        {
-            gpsTv.setVisibility(View.GONE);
-            return;
-        }else
-            gpsTv.setVisibility(View.VISIBLE);
+        setGpsCityStatus(gpsCity);
 
         // 填充历史城市
         maxHistory = maxHistory > CityPickerPresenter.MAX_HEADER_CITY_SIZE ? CityPickerPresenter.MAX_HEADER_CITY_SIZE : maxHistory;
@@ -507,20 +503,26 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * 城市定位成功
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void whenLocationSucc(GpsCityEvent event)
+    {
+        setGpsCityStatus(event.gpsCity);
+    }
+
+    private void setGpsCityStatus(BaseCity gpsCity)
     {
         if (gpsTv == null) return;
         if (!useGpsCity)
         {
             gpsTv.setVisibility(View.GONE);
             return;
-        }else
+        } else
             gpsTv.setVisibility(View.VISIBLE);
 
-         gpsCity = event.gpsCity;
+        this.gpsCity = gpsCity;
         //设置自动定位城市
         if (gpsCity != null)
         {
@@ -528,10 +530,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             gpsTv.setOnClickListener(this);
         } else
         {
-            gpsTv.setText(Res.string(this,R.string.location_city_lodding));
+            gpsTv.setText(Res.string(this, R.string.location_city_lodding));
             gpsTv.setOnClickListener(null);
         }
-
     }
 
     @Override

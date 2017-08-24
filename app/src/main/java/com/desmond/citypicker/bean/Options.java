@@ -232,7 +232,7 @@ public class Options implements  Parcelable
 
         setSearchViewTextColor(R.color.black);
         setSearchViewDrawable(R.drawable.header_city_bg);
-        setTitleBarBackBtnDrawable(R.drawable.press_def_bg);
+        setTitleBarBackBtnDrawable(R.drawable.back_normal);
 
         setIndexBarTextSize(14);
         setIndexBarTextColor(R.color.theme_vice2_color);

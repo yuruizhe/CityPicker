@@ -33,6 +33,8 @@ public class CityPicker
     static CityPicker instance;
     IOnCityPickerCheckedCallBack callback;
 
+    public static BaseCity gpsCity ;
+
     private CityPicker()
     {
         EventBus.getDefault().register(this);
@@ -41,7 +43,14 @@ public class CityPicker
     @MainThread
     public static CityPicker with(Context context)
     {
-        instance = new CityPicker();
+        if (instance == null)
+        {
+            synchronized (CityPicker.class)
+            {
+                if (instance == null)
+                    instance = new CityPicker();
+            }
+        }
         instance.options = new Options(context.getApplicationContext());
         return instance;
     }
@@ -95,6 +104,7 @@ public class CityPicker
     @MainThread
     public static void setGpsCity(BaseCity baseCity)
     {
+        gpsCity = baseCity;
         EventBus.getDefault().post(new GpsCityEvent(baseCity));
     }
 
@@ -286,6 +296,7 @@ public class CityPicker
         EventBus.getDefault().unregister(this);
         instance = null;
         options = null;
+        gpsCity = null;
     }
 
 }

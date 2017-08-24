@@ -11,7 +11,7 @@
     <color name="white">#FFFFFF</color>
 
 
-    <color name="theme_main_color">#199475</color>
+    <color name="theme_main_color">#006DCC</color>
     <color name="theme_vice1_color">#c7ceb2</color>
-    <color name="theme_vice2_color">#e08031</color>
+    <color name="theme_vice2_color">#006DCC</color>
 </resources>
