@@ -204,5 +204,5 @@ Thanks
 
 Contact author
 ---
-QQ 350248823</br>
+QQ 350248823 添加时注明github-citypicker</br>
 欢迎issues，作者看到后会第一时间回复
